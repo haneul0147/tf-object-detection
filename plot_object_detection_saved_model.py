@@ -17,6 +17,8 @@ Object Detection From TF2 Saved Model
 # shown bellow will download the test images from the `TensorFlow Model Garden <https://github.com/tensorflow/models/tree/master/research/object_detection/test_images>`_
 # and save them inside the ``data/images`` folder.
 import os
+
+import cv2
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'    # Suppress TensorFlow logging (1)
 import pathlib
 import tensorflow as tf
@@ -159,12 +161,14 @@ def load_image_into_numpy_array(path):
     Returns:
       uint8 numpy array with shape (img_height, img_width, 3)
     """
-    return np.array(Image.open(path))
+    return cv2.imread(str(path))
 
 
 for image_path in IMAGE_PATHS:
 
     print('Running inference for {}... '.format(image_path), end='')
+
+    
 
     image_np = load_image_into_numpy_array(image_path)
 
@@ -208,9 +212,10 @@ for image_path in IMAGE_PATHS:
           min_score_thresh=.30,
           agnostic_mode=False)
 
-    plt.figure()
-    plt.imshow(image_np_with_detections)
-    print('Done')
-plt.show()
+    cv2.imshow(str(image_path),image_np)
+
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
 
 # sphinx_gallery_thumbnail_number = 2
